@@ -45,25 +45,15 @@
       player = new YT.Player('player', {
         videoId: '4MTGcekQsis',
         playerVars: {
-          autoplay: 1,      // autoplay
-          mute: 1,          // must start muted (browser policy), unmuted instantly via API
-          loop: 0,          // no loop — stop when finished
+          autoplay: 0,      // no autoplay
+          mute: 0,          // unmuted by default
+          loop: 0,          // no loop
           playsinline: 1,
           controls: 1,
           rel: 0
         },
         events: {
-          onReady: function (e) {
-            e.target.playVideo();
-          },
           onStateChange: function (e) {
-            // As soon as playing starts, wait 1s then unmute to full volume
-            if (e.data === YT.PlayerState.PLAYING) {
-              setTimeout(function () {
-                e.target.unMute();
-                e.target.setVolume(100);
-              }, 1000);
-            }
             // When video ends, stop and reset to beginning
             if (e.data === YT.PlayerState.ENDED) {
               e.target.stopVideo();
