@@ -57,10 +57,12 @@
             e.target.playVideo();
           },
           onStateChange: function (e) {
-            // As soon as playing starts, unmute to full volume
+            // As soon as playing starts, wait 1s then unmute to full volume
             if (e.data === YT.PlayerState.PLAYING) {
-              e.target.unMute();
-              e.target.setVolume(100);
+              setTimeout(function () {
+                e.target.unMute();
+                e.target.setVolume(100);
+              }, 1000);
             }
             // When video ends, stop and reset to beginning
             if (e.data === YT.PlayerState.ENDED) {
