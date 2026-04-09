@@ -1,70 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Video Player</title>
   <style>
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
-    html, body {
+    html,
+    body {
       width: 100%;
       height: 100%;
       background: #000;
       overflow: hidden;
     }
 
-    #player {
+    video {
       position: fixed;
       inset: 0;
       width: 100%;
       height: 100%;
+      object-fit: cover;
+    }
+
+    #unmute-btn {
+      display: none;
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 10;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      padding: 10px 18px;
+      font-size: 15px;
+      font-family: sans-serif;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #play-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9;
+      background: rgba(0, 0, 0, 0.6);
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #play-overlay.visible {
+      display: flex;
+    }
+
+    #play-overlay svg {
+      width: 88px;
+      height: 88px;
+      fill: rgba(255, 255, 255, 0.9);
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
     }
   </style>
 </head>
+
 <body>
-  <div id="player"></div>
+  <!-- Chromium 139 (WebView 139.0.7258.1, arm64-v8a) -->
+  <!-- muted is required for autoplay even in modern WebViews -->
+  <video id="vid" src="Diplomat_Hotel_MoneyShow_720p_3_fixed.mp4" muted autoplay playsinline preload="auto" loop
+    controls></video>
+
+  <button id="unmute-btn" aria-label="Unmute video">Tap to unmute</button>
+
+  <div id="play-overlay" role="button" aria-label="Play video">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 5v14l11-7z" />
+    </svg>
+  </div>
 
   <script>
-    // Load YouTube IFrame API
-    var tag = document.createElement('script');
-    tag.src = 'https://www.youtube.com/iframe_api';
-    document.head.appendChild(tag);
+    const vid = document.getElementById('vid');
+    const unmuteBtn = document.getElementById('unmute-btn');
+    const playOverlay = document.getElementById('play-overlay');
 
-    var player;
+    async function tryPlay() {
+      vid.muted = true;
+      try {
+        await vid.play();
+        unmuteBtn.style.display = 'block';
+      } catch {
+        // App has disabled autoplay (setMediaPlaybackRequiresUserGesture) — show tap-to-play
+        playOverlay.classList.add('visible');
+      }
+    }
 
-    window.onYouTubeIframeAPIReady = function () {
-      player = new YT.Player('player', {
-        videoId: 'aqz-KE-bpKQ',
-        playerVars: {
-          autoplay: 1,
-          mute: 1,          // must start muted to satisfy autoplay policy
-          playsinline: 1,
-          loop: 1,
-          playlist: 'aqz-KE-bpKQ',
-          controls: 1,
-          rel: 0
-        },
-        events: {
-          onReady: function (e) {
-            e.target.playVideo();
-          },
-          onStateChange: function (e) {
-            // Once playing, unmute and set full volume
-            if (e.data === YT.PlayerState.PLAYING) {
-              e.target.unMute();
-              e.target.setVolume(100);
-            }
-          }
-        }
-      });
-    };
+    unmuteBtn.addEventListener('click', () => {
+      vid.muted = false;
+      vid.volume = 1;
+      unmuteBtn.style.display = 'none';
+    });
+
+    playOverlay.addEventListener('click', async () => {
+      playOverlay.classList.remove('visible');
+      vid.muted = true;
+      try {
+        await vid.play();
+        unmuteBtn.style.display = 'block';
+      } catch { }
+    });
+
+    tryPlay();
   </script>
 </body>
-</html>
 
 </html>
