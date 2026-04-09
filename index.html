@@ -18,21 +18,46 @@
       overflow: hidden;
     }
 
-    iframe {
+    #player {
       position: fixed;
       inset: 0;
       width: 100%;
       height: 100%;
-      border: none;
     }
   </style>
 </head>
 <body>
-  <!-- YouTube embed test — video: Big Buck Bunny (public domain) -->
-  <iframe
-    src="https://www.youtube.com/embed/4MTGcekQsis?autoplay=1&mute=1&loop=1&playlist=4MTGcekQsis&playsinline=1&controls=1&rel=0"
-    allow="autoplay; fullscreen; encrypted-media"
-    allowfullscreen
-  ></iframe>
+  <div id="player"></div>
+
+  <script>
+    var tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+
+    var player;
+
+    window.onYouTubeIframeAPIReady = function () {
+      player = new YT.Player('player', {
+        videoId: '4MTGcekQsis',
+        playerVars: {
+          autoplay: 0,      // no autoplay
+          mute: 0,          // unmuted by default
+          loop: 0,          // no loop — stop when finished
+          playsinline: 1,
+          controls: 1,
+          rel: 0
+        },
+        events: {
+          onStateChange: function (e) {
+            // When video ends (state = 0), stop and reset to beginning
+            if (e.data === YT.PlayerState.ENDED) {
+              e.target.stopVideo();
+              e.target.seekTo(0);
+            }
+          }
+        }
+      });
+    };
+  </script>
 </body>
 </html>
