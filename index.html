@@ -54,10 +54,10 @@
         },
         events: {
           onStateChange: function (e) {
-            // When video ends, stop and reset to beginning
+            // When video ends, pause and reset to beginning — no loop
             if (e.data === YT.PlayerState.ENDED) {
-              e.target.stopVideo();
-              e.target.seekTo(0);
+              e.target.pauseVideo();
+              e.target.seekTo(0, true);
             }
           }
         }
