@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Video Player</title>
   <style>
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
-    html, body {
+    html,
+    body {
       width: 100%;
       height: 100%;
       background: #000;
@@ -67,25 +71,18 @@
     }
   </style>
 </head>
+
 <body>
   <!-- Chromium 139 (WebView 139.0.7258.1, arm64-v8a) -->
   <!-- muted is required for autoplay even in modern WebViews -->
-  <video
-    id="vid"
-    src="Diplomat_Hotel_MoneyShow_720p_3_fixed.mp4"
-    muted
-    autoplay
-    playsinline
-    preload="auto"
-    loop
-    controls
-  ></video>
+  <video id="vid" src="Diplomat_Hotel_MoneyShow_720p_3_fixed.mp4" muted autoplay playsinline preload="auto" loop
+    controls></video>
 
   <button id="unmute-btn" aria-label="Unmute video">Tap to unmute</button>
 
   <div id="play-overlay" role="button" aria-label="Play video">
     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path d="M8 5v14l11-7z"/>
+      <path d="M8 5v14l11-7z" />
     </svg>
   </div>
 
@@ -117,10 +114,11 @@
       try {
         await vid.play();
         unmuteBtn.style.display = 'block';
-      } catch {}
+      } catch { }
     });
 
     tryPlay();
   </script>
 </body>
+
 </html>
